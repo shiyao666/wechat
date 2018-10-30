@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "share1_pages/invite",
+    "ruankao"
+  
+ 
+    
+   
+
+  ],
+  "window": {
+    "backgroundTextStyle": "#1e1e1e",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  }
+}

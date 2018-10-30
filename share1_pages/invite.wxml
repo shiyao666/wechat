@@ -1,0 +1,100 @@
+<view class='container'>
+  <view class='loader' id='loding1'></view>
+  <view class='loader_overlay'></view>
+  <view class='loader_cogs__top'>
+    <view class='top_part'></view>
+    <view class='top_part'></view>
+    <view class='top_part'></view>
+    <view class='top_hole'></view>
+
+  </view>
+
+  <view class='loader_cogs__left'>
+    <view class='left_part'></view>
+    <view class='left_part'></view>
+    <view class='left_part'></view>
+    <view class='left_hole'></view>
+  </view>
+  <view class='loader_cogs__bottom'>
+    <view class='bottom_part'></view>
+    <view class='bottom_part'></view>
+    <view class='bottom_part'></view>
+    <view class='bottom_hole'></view>
+  </view>
+  <p class="loading_p">loading...</p>
+  <view class="max_box">
+    <view class="logo">
+      <image src="../images/yaoqing06.png" class="logo_img1"></image>
+    </view>
+    <view class="banner">
+      <view class='line1'></view>
+      <view class="yaoqing_span">4224</view>
+      <view class='line1'></view>
+
+    </view>
+    <view class="banner2">
+      <view class="view_1"></view>
+      <view class="view_2"></view>
+
+    </view>
+    <view class="view_3">
+      <view class="span_1 icon">2018年12月20日</view>
+      <view class="span_2 icon">北京</view>
+      <view class="span_3 icon">13800元</view>
+    </view>
+    <view class="form1">
+      <view class="form {{flag===0?'hide':''}}" id="newform">
+        <view class="user5 input_group icon">
+          <input type="text" id="name1" placeholder="姓名" name='name' bindinput='searchInput' class="user1" />
+        </view>
+        <view class="phone input_group icon">
+          <input type="text" id="phone1" class='phone_num' bindblur='phoneinput' name='phone_number' placeholder="手机号" />
+          <button class="ames" disabled='{{disabled}}' data-id="2" bindtap='yanzheng'>{{time}}</button>
+          <button bindtap="getVerificationCode">
+
+          </button>
+        </view>
+
+        <view class="idlogo1 input_group icon">
+          <input type="text" id="idlogo1" placeholder="验证码" name='ames1' bindblur='is_code' />
+
+        </view>
+
+        <button id="btnSendCode" bindtap='click' class="submit1 submit2">点击报名</button>
+        <view class="share_else_div1">
+          <button class="share_else share_else1">分享预览</button>
+        </view>
+      </view>
+    </view>
+    <view class="inv_success form2" hidden='{{hidden_name}}'>
+
+      <view class="form" id="newform">
+        <span class="scs1003_success">报名成功</span>
+
+      </view>
+      <button class="success_share  share_else2" bindtap='click2'>分享预览</button>
+    </view>
+    <view class="form3" hidden='{{hidden_name3}}'>
+      <view class="form" id="newform">
+        <view class="user5 input_group icon">
+          <input type="text" id="name" placeholder="姓名" class="user1" />
+        </view>
+        <view class="phone input_group icon">
+          <input type="text" id="phone" class='phone_num' placeholder="手机号" />
+
+        </view>
+
+        <view class="idlogo1 input_group icon">
+          <input type="text" id="idlogo" placeholder="验证码" />
+
+        </view>
+
+        <button id="btnSendCode" class="submit1" disabled="true">点击报名</button>
+        <view class="share_else_div2">
+          <button class="share_else2" open-type='share'>分享预览</button>
+
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
