@@ -27,7 +27,7 @@ Page({
   searchInput: function(e) {
     this.setData({
       name: e.detail.value,
-      
+
     })
     wx.setStorage({
       key: 'name',
@@ -77,7 +77,7 @@ Page({
     let that = this;
     var interval = null;
     wx.navigateTo({
-      url: 'this.data.time',
+      url: 'https://www.csst.com.cn/index.php?m=invform&c=phone&a=index',
 
     })
     this.setData({
@@ -103,7 +103,10 @@ Page({
     }, 1000)
     wx.request({
       url: 'https://www.csst.com.cn/index.php?m=invform&c=phone&a=index',
-      data: 'form',
+      data: {
+        name: wx.getStorageSync('name'),
+        phone: wx.getStorageSync('phone'),
+      },
       method: 'post',
       success: function(res) {
 
@@ -146,7 +149,7 @@ Page({
    */
   onUnload: function() {
 
-  }, 
+  },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
