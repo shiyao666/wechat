@@ -1,5 +1,4 @@
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -9,25 +8,106 @@ Page({
     currentTime: 60,
     hidden_name: true,
     hidden_name3: true,
-    flag: 2
+    flag: 2,
+    img: 'src/ae,jpeg',
+    invite_name: '姓名',
+    start_time: "时间",
+    address: "地址",
+    price: "价格",
+    contents: "内容",
+    max_background: "",
+    logo: "",
+    disabled: false,
+    loadingHidden: false
   },
-
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
-    var interval = null;
-    wx.setStorage({
-      key: 'name',
-      data: 'res.data',
+  onPullDownRefresh: function() {
+    this.setData({
+      loadingHidden: false
+    });
+    var that = this;
+    wx.request({
+      url: 'https://www.geekxz.com/action/works/recWorks',
+      data: {
+        num: '5',
+      },
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success: function(res) {
+        console.log(res.data.data.works);
+        that.setData({
+          recWorks: res.data.data.works,
+        })
+      },
+      complete: function() { // complete
+        wx.hideNavigationBarLoading() //完成停止加载
+        wx.stopPullDownRefresh() //停止下拉刷新
+      }
     })
-    var student = wx.getStorageSync('name');
+    setTimeout(function() {
+      that.setData({
+        loadingHidden: true
+      });
+    }, 2000);
+    wx.getExtConfig({
+      success: function() {
+
+      },
+      fail: function() {
+
+      },
+      complete: function() {
+
+      }
+    })
+    const query = wx.createSelectorQuery();
+    query.select('#the-id').boundingClientRect()
+    query.selectViewport().scrollOffset();
+    query.exec(function(res) {
+      res[0].top
+      res[1].scrollTop
+    })
   },
 
+  /**扫码 */
+  scanInfo: function() {
+    var that = this;
+    var show;
+
+    wx.scanCode({
+      success: (res) => {
+        this.show = res.result;
+        console.log(this.show)
+        that.setData({
+          addName: this.show
+        })
+        // wx.navigateTo({
+        //   url: "invite",
+        // })
+        wx.showToast({
+          title: '扫码成功',
+          icon: 'success',
+          duration: 2000
+        })
+      },
+      fail: (res) => {
+        wx.showModal({
+          title: '提示',
+          content: "未获取到二维码",
+          showCancel: false,
+          success: function(res) {}
+        })
+      },
+      complete: (res) => {}
+    })
+
+  },
   searchInput: function(e) {
     this.setData({
       name: e.detail.value,
-
     })
     wx.setStorage({
       key: 'name',
@@ -36,12 +116,12 @@ Page({
   },
   phoneinput: function(e) {
     this.setData({
-      phone: e.detail.value
-    })
-    wx.setStorage({
-      key: 'phone',
-      data: e.detail.value,
-    })
+        phone: parseInt(e.detail.value),
+      }),
+      wx.setStorage({
+        key: 'phone',
+        data: parseInt(e.detail.value),
+      })
   },
   is_code: function(e) {
     this.setData({
@@ -51,69 +131,156 @@ Page({
       key: 'code',
       data: e.detail.value,
     })
-
-
   },
-
   click: function() {
-
-    this.setData({
-      hidden_name: !this.data.hidden_name,
-      flag: 0
-    })
+    var that = this;
     wx.request({
-      url: 'https://www.csst.com.cn/index.php?m=invform&c=phone&a=index',
+      url: 'https://api.csst.com.cn/index.php?m=invform&c=phone&a=logon',
       data: {
-        name: wx.getStorageSync('name'),
         phone: wx.getStorageSync('phone'),
         code: wx.getStorageSync('code'),
+        token_user: wx.getStorageSync('token_user'),
+        form_id: 1001
       },
       method: 'post',
-      success: function() {}
+      header: {
+        //设置参数内容类型为x-www-form-urlencoded
+        'content-type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      success: function(res) {
+        if (res.data.code == 10004) {
+          that.setData({
+            hidden_name: !that.data.hidden_name,
+            flag: 0
+          })
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: res.data.msg,
+            showCancel: false,
+            success: function(res) {}
+          })
+        }
+      },
     })
   },
+  onLoad: function(options) {
+    var that = this;
+    var token_user;
+    wx.request({
+      url: 'https://api.csst.com.cn/index.php?m=invform&c=phone&a=index',
+      data: {
+        form_id: parseInt(1001),
+
+        // https:api.weixin.qq.com/wxa/getwxacodeaccess_token=ACCESS_TOKEN
+        token_user: '',
+      },
+      method: 'post',
+      header: {
+        //设置参数内容类型为x-www-form-urlencoded
+        'content-type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      success: function(res) {
+        console.log(res.data.data.name)
+        // var wxparse = require('../lib/wxParse/wxParse.js');
+        // var article = res.data.data.content;
+        // wxparse.wxParse('article', 'html', article, that, 5);
+        that.setData({
+          token_user: res.data.data.token_user,
+          invite_name: res.data.data.name,
+          start_time: res.data.data.start_time,
+          address: res.data.data.address,
+          price: res.data.data.price,
+          contents: res.data.data.content,
+          max_background: res.data.data.bg_image,
+          logo: res.data.data.image,
+        })
+        console.log(res.data.data.content);
+        if (wx.getStorageSync('token_user') == undefined || wx.getStorageSync('token_user') == null) {
+          wx.setStorage({
+            key: 'token_user',
+            data: res.data.data.token_user,
+          })
+        }
+        that.setData({
+          loadingHidden: true
+        });
+      },
+      fail: function(res) {}
+    });
+    var address_data = new Array(["a", 2, "s"])
+    // 获取token转化为cookie
+    var interval = null;
+    wx.setStorage({
+      key: 'name',
+      data: 'res.data',
+    })
+    var student = wx.getStorageSync('name');
+  },
+
+
+
   // 验证码按钮
   yanzheng: function(event) {
+    var token_user;
     let that = this;
     var interval = null;
-    wx.navigateTo({
-      url: 'https://www.csst.com.cn/index.php?m=invform&c=phone&a=index',
-
-    })
-    this.setData({
-      disabled: true
-    })
     // 收发验证码
-    var currentTime = that.data.currentTime;
-    interval = setInterval(function() {
-      currentTime--;
-      that.setData({
-        time: currentTime + '秒后获取'
-      })
-      if (currentTime <= 0) {
-
-        clearInterval(interval)
-        that.setData({
-          disabled: false,
-          time: '获取验证码',
-          currentTime: 60,
-
-        })
-      }
-    }, 1000)
     wx.request({
-      url: 'https://www.csst.com.cn/index.php?m=invform&c=phone&a=index',
+      url: 'https://api.csst.com.cn/index.php?m=invform&c=phone&a=send_mes',
       data: {
         name: wx.getStorageSync('name'),
         phone: wx.getStorageSync('phone'),
+        form_id: parseInt(1001),
+        token_user: 'wdwacpdsc',
       },
       method: 'post',
-      success: function(res) {
-
+      header: {
+        //设置参数内容类型为x-www-form-urlencoded
+        'content-type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
       },
-      fail: function(res) {
+      success: function(res) {
+        if (res.data.code == 10003) {
 
-      }
+          wx.showModal({
+            title: '提示',
+            content: res.data.msg,
+            showCancel: false,
+            success: function(res) {}
+          })
+        } else {
+
+          token_user = parseInt(res.data.msg);
+          wx.showModal({
+            title: '提醒',
+            content: '信息已发送',
+            showCancel: false,
+            success: function(res) {}
+          })
+          var currentTime = that.data.currentTime;
+          interval = setInterval(function() {
+            currentTime--;
+            that.setData({
+              time: currentTime + '秒后获取'
+            })
+            that.setData({
+              disabled: true
+            })
+            if (currentTime <= 0) {
+              clearInterval(interval)
+              that.setData({
+                disabled: false,
+                time: '获取验证码',
+                currentTime: 60,
+              })
+            }
+          }, 1000)
+        }
+      },
+      fail: function(res) {}
     });
   },
   click2: function(e) {
@@ -169,6 +336,10 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function() {
-
+    return {
+      title: "分享活动报名系统",
+      desc: "报名页面",
+      path: '/page/share1_pages/id=123'
+    }
   }
 })

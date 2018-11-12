@@ -1,35 +1,32 @@
+<import src="../lib/wxParse/wxParse.wxml" />
 <view class='container'>
-  <view class='loader' id='loding1'></view>
-  <view class='loader_overlay'></view>
-  <view class='loader_cogs__top'>
-    <view class='top_part'></view>
-    <view class='top_part'></view>
-    <view class='top_part'></view>
-    <view class='top_hole'></view>
 
-  </view>
 
-  <view class='loader_cogs__left'>
-    <view class='left_part'></view>
-    <view class='left_part'></view>
-    <view class='left_part'></view>
-    <view class='left_hole'></view>
-  </view>
-  <view class='loader_cogs__bottom'>
-    <view class='bottom_part'></view>
-    <view class='bottom_part'></view>
-    <view class='bottom_part'></view>
-    <view class='bottom_hole'></view>
-  </view>
-  <p class="loading_p">loading...</p>
-  <view class="max_box">
+  <view class="max_box" style='background-image:url("{{max_background}}")'>
+    <view id="loading" hidden="{{loadingHidden}}">
+      <view id="loading-center">
+        <view id="loading-center-absolute">
+          <view class="object" id="object_one"></view>
+          <view class="object" id="object_two"></view>
+          <view class="object" id="object_three"></view>
+          <view class="object" id="object_four"></view>
+          <view class="object" id="object_five"></view>
+          <view class="object" id="object_six"></view>
+          <view class="object" id="object_seven"></view>
+          <view class="object" id="object_eight"></view>
+          <view class="object" id="object_big"></view>
+        </view>
+      </view>
+    </view>
+
     <view class="logo">
-      <image src="../images/yaoqing06.png" class="logo_img1"></image>
+      <!-- <view bindtap="scanInfo">点我扫一扫</view> -->
+      <image src='{{logo}}' class="logo_img1"></image>
     </view>
     <view class="banner">
-      <view class='line1'></view>
-      <view class="yaoqing_span">4224</view>
-      <view class='line1'></view>
+      <view class='line1 line_left'></view>
+      <view class="yaoqing_span">{{invite_name}},邀请您参加</view>
+      <view class='line1 line_right'></view>
 
     </view>
     <view class="banner2">
@@ -37,10 +34,19 @@
       <view class="view_2"></view>
 
     </view>
+
+    <view>
+
+      <view>{{show}}</view>
+    </view>
     <view class="view_3">
-      <view class="span_1 icon">2018年12月20日</view>
-      <view class="span_2 icon">北京</view>
-      <view class="span_3 icon">13800元</view>
+      <view class="span_1 icon">{{start_time}}</view>
+      <view class="span_2 icon">{{address}}</view>
+      <view class="span_3 icon">{{price}}</view>
+    </view>
+    <view class='content'>
+      <image src='http://www.csst.com.cn/uploadfile/2018/0926/20180926023402892.png'></image>
+      <template is="wxParse" data="{{wxParseData:article.nodes}}" />
     </view>
     <view class="form1">
       <view class="form {{flag===0?'hide':''}}" id="newform">
@@ -60,7 +66,7 @@
 
         </view>
 
-        <button id="btnSendCode" bindtap='click' class="submit1 submit2">点击报名</button>
+        <button id="btnSendCode" bindtap='click' class="submit1 submit2" >点击报名</button>
         <view class="share_else_div1">
           <button class="share_else share_else1">分享预览</button>
         </view>
@@ -89,9 +95,9 @@
 
         </view>
 
-        <button id="btnSendCode" class="submit1" disabled="true">点击报名</button>
+        <button id="btnSendCode" class="submit1">点击报名</button>
         <view class="share_else_div2">
-          <button class="share_else2" open-type='share'>分享预览</button>
+          <button class="share_else2" open-type='share'>分享预览</button> 
 
         </view>
       </view>
